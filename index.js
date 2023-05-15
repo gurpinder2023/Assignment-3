@@ -3,17 +3,45 @@ let currentPage = 1;
 let pokemons = []
 
 const updatePaginationDiv = (currentPage, numPages) => {
-  $('#pagination').empty()
+  $('#pagination').empty();
 
-  const startPage = 1;
-  const endPage = numPages;
-  for (let i = startPage; i <= endPage; i++) {
-    $('#pagination').append(`
-    <button class="btn btn-primary page ml-1 numberedButtons" value="${i}">${i}</button>
-    `)
+  // calculate start and end page numbers based on current page and numPages
+  let startPage = Math.max(currentPage - 2, 1);
+  let endPage = Math.min(currentPage + 2, numPages);
+
+  // if there are less than 5 pages, adjust the start and end page numbers accordingly
+  if (numPages <= 5) {
+    startPage = 1;
+    endPage = numPages;
+  } else if (currentPage <= 2) {
+    endPage = 5;
+  } else if (currentPage >= numPages - 1) {
+    startPage = numPages - 4;
   }
 
-}
+  // add buttons for each page
+  for (let i = startPage; i <= endPage; i++) {
+    let activeClass = "";
+  if (i === currentPage) {
+    activeClass = "active";
+  }
+    $('#pagination').append(`
+      <button class="btn btn-primary page ml-1 numberedButtons ${activeClass}" value="${i}">${i}</button>
+    `);
+  }
+
+  // add "previous" and "next" buttons as needed
+  if (currentPage > 1) {
+    $('#pagination').prepend(`
+      <button class="btn btn-primary page ml-1 numberedButtons" value="${currentPage - 1}">&laquo; Previous</button>
+    `);
+  }
+  if (currentPage < numPages) {
+    $('#pagination').append(`
+      <button class="btn btn-primary page ml-1 numberedButtons" value="${currentPage + 1}">Next &raquo;</button>
+    `);
+  }
+};
 
 
 const paginate = async (currentPage, PAGE_SIZE, pokemons) => {
@@ -44,6 +72,7 @@ const setup = async () => {
   $('#pokeCards').empty()
   let response = await axios.get('https://pokeapi.co/api/v2/pokemon?offset=0&limit=810');
   pokemons = response.data.results;
+
 
   
 
