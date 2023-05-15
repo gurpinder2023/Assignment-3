@@ -64,6 +64,38 @@ const paginate = async (currentPage, PAGE_SIZE, pokemons) => {
 }
 
 
+const filterPokemons = async () => {
+  console.log(pokemons);
+
+  const checkedTypes = Array.from(document.querySelectorAll('input[type=checkbox]:checked')).map((input) => input.value);
+  console.log(checkedTypes);
+
+   let filteredPokemons = [...pokemons];
+  
+  if (!filteredPokemons[0].types) {
+   
+    for (let i = 0; i < filteredPokemons.length; i++) {
+      const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${filteredPokemons[i].name}`);
+      filteredPokemons[i].types = res.data.types.map((type) => type.type.name);
+    }
+  }
+
+  filteredPokemons = filteredPokemons.filter((pokemon) => {
+    const pokemonTypes = pokemon.types;
+    return checkedTypes.every((type) => pokemonTypes.includes(type));
+  });
+  console.log(filteredPokemons);
+
+pokemons = filteredPokemons;
+const numPages = Math.ceil(pokemons.length / PAGE_SIZE);
+currentPage = 1;
+
+
+console.log(numPages);
+  paginate(currentPage, PAGE_SIZE, pokemons);
+  updatePaginationDiv(currentPage, numPages);
+};
+
 
 const setup = async () => {
   // test out poke api using axios here
@@ -148,6 +180,12 @@ const setup = async () => {
   })
 
 
+  const checkboxes = document.querySelectorAll('input[type=checkbox]');
+
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', filterPokemons);
+  });
+  
  
 
 
