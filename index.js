@@ -63,6 +63,17 @@ const paginate = async (currentPage, PAGE_SIZE, pokemons) => {
   })
 }
 
+const numberOfPokemon = (v, totalPokemonCount) => {
+  $("#pokeCardsHeader").empty();
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const endIndex = Math.min(currentPage * PAGE_SIZE, totalPokemonCount);
+  const currentPagePokemonCount = endIndex - startIndex;
+  $("#pokeCardsHeader").append(`
+    <h2>
+      Showing ${currentPagePokemonCount} of ${totalPokemonCount} pokemons
+    </h2>
+  `);
+};
 
 const filterPokemons = async () => {
   console.log(pokemons);
@@ -94,6 +105,8 @@ currentPage = 1;
 console.log(numPages);
   paginate(currentPage, PAGE_SIZE, pokemons);
   updatePaginationDiv(currentPage, numPages);
+  numberOfPokemon(currentPage, pokemons.length);
+
 };
 
 
@@ -124,9 +137,10 @@ const setup = async () => {
 
 
 
-  paginate(currentPage, PAGE_SIZE, pokemons)
+  paginate(currentPage, PAGE_SIZE, pokemons);
   const numPages = Math.ceil(pokemons.length / PAGE_SIZE)
-  updatePaginationDiv(currentPage, numPages)
+  updatePaginationDiv(currentPage, numPages);
+  numberOfPokemon(currentPage, pokemons.length);
 
 
 
