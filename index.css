@@ -24,6 +24,7 @@
 
 #filters{
   display: flex;
+  flex-wrap: wrap;
   
 }
 
