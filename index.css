@@ -22,4 +22,12 @@
   height: 100%;
 }
 
+#filters{
+  display: flex;
+  
+}
+
+.form-check{
+  padding: 20px;
+}
 

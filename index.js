@@ -72,6 +72,20 @@ const setup = async () => {
   $('#pokeCards').empty()
   let response = await axios.get('https://pokeapi.co/api/v2/pokemon?offset=0&limit=810');
   pokemons = response.data.results;
+  const typesResponse = await axios.get('https://pokeapi.co/api/v2/type');
+  const types = typesResponse.data.results.map((type) => type.name);
+
+  // add checkboxes for each type
+  types.forEach((type) => {
+  $('#filters').append(`
+    <div class="form-check">
+      <input class="form-check-input type-checkbox" type="checkbox" value="${type}" id="${type}">
+      <label class="form-check-label" for="${type}">
+        ${type}
+      </label>
+    </div>
+  `);
+});
 
 
   
